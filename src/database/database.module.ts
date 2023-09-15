@@ -10,8 +10,8 @@ import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-clas
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: "postgres",
-        host: configService.getOrThrow("POSTGRES_HOST"),
         port: +configService.getOrThrow("POSTGRES_PORT"),
+        host: configService.getOrThrow("POSTGRES_HOST"),
         username: configService.getOrThrow("POSTGRES_USER"),
         password: configService.getOrThrow("POSTGRES_PASSWORD"),
         database: configService.getOrThrow("POSTGRES_DB"),
