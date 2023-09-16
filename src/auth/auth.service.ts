@@ -104,7 +104,7 @@ export class AuthService {
     const payload: JwtPayload = { username: user.email, sub: user.id };
     const token = await this.jwtService.signAsync(payload, {
       secret: this.configService.getOrThrow("ACCESS_TOKEN_SECRET_KEY"),
-      expiresIn: this.configService.getOrThrow("ACCESS_TOKEN_EXPIRATION"),
+      expiresIn: `${this.configService.getOrThrow("ACCESS_TOKEN_EXPIRATION")}s`,
     });
     return token;
   }
@@ -113,7 +113,9 @@ export class AuthService {
     const payload: JwtPayload = { username: user.email, sub: user.id };
     const token = await this.jwtService.signAsync(payload, {
       secret: this.configService.getOrThrow("REFRESH_TOKEN_SECRET_KEY"),
-      expiresIn: this.configService.getOrThrow("REFRESH_TOKEN_EXPIRATION"),
+      expiresIn: `${this.configService.getOrThrow(
+        "REFRESH_TOKEN_EXPIRATION",
+      )}s`,
     });
     return token;
   }

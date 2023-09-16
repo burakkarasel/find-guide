@@ -1,5 +1,12 @@
 import { AbstractEntity } from "src/database/abstract.entity";
-import { Column, CreateDateColumn, Entity, UpdateDateColumn } from "typeorm";
+import { Guide } from "src/guides/entities/guide.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class User extends AbstractEntity<User> {
@@ -17,4 +24,6 @@ export class User extends AbstractEntity<User> {
   phoneNumber: string;
   @Column({ name: "full_name" })
   fullName: string;
+  @OneToOne(() => Guide, { nullable: true })
+  guide: Guide;
 }
