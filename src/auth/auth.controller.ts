@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { SignUpDto } from "./dtos";
-import { LocalGuard } from "./guard";
+import { LocalGuard, RefreshGuard } from "./guard";
 import { GetUser } from "./decorator";
 import { User } from "src/users/entities";
 import { Response } from "express";
@@ -20,6 +20,16 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
     const msg = await this.authService.signIn(user, res);
+    res.send(msg);
+  }
+
+  @Post("refresh")
+  @UseGuards(RefreshGuard)
+  async refresh(
+    @GetUser() user: User,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<void> {
+    const msg = await this.authService.refresh(user, res);
     res.send(msg);
   }
 }

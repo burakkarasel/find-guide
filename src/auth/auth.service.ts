@@ -87,6 +87,19 @@ export class AuthService {
     return { message: "OK" };
   }
 
+  async refresh(user: User, res: Response): Promise<object> {
+    const accessToken = await this.signAccessToken(user);
+
+    const expires = new Date();
+    expires.setSeconds(
+      expires.getSeconds() +
+        this.configService.getOrThrow("ACCESS_TOKEN_EXPIRATION"),
+    );
+    res.cookie("accessToken", accessToken, { expires, httpOnly: true });
+
+    return { message: "OK" };
+  }
+
   async signAccessToken(user: User): Promise<string> {
     const payload: JwtPayload = { username: user.email, sub: user.id };
     const token = await this.jwtService.signAsync(payload, {
