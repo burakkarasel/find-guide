@@ -1,10 +1,11 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
 import { GetUser } from "src/auth/decorator";
-import { CreateGuidanceServiceDto } from "./dto";
+import { CreateGuidanceServiceDto, ListGuidesDto } from "./dto";
 import { Guide } from "./entities";
 import { GuidesService } from "./guides.service";
 import { User } from "src/users/entities";
 import { JwtGuard } from "src/auth/guard";
+import { ListGuidePipe } from "./pipes";
 
 @Controller("api/v1/guides")
 export class GuidesController {
@@ -16,5 +17,11 @@ export class GuidesController {
     @Body() dtos: CreateGuidanceServiceDto[],
   ): Promise<Guide> {
     return this.guidesService.create(user, dtos);
+  }
+
+  @Get()
+  async list(@Query(new ListGuidePipe()) dto: ListGuidesDto) {
+    console.log("my dto: ", dto);
+    return this.guidesService.listGuides(dto);
   }
 }

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { GuidesRepository } from "./guides.repository";
 import { User } from "src/users/entities";
-import { CreateGuidanceServiceDto } from "./dto";
+import { CreateGuidanceServiceDto, ListGuidesDto } from "./dto";
 import { GuidanceService, Guide } from "./entities";
 
 @Injectable()
@@ -22,5 +22,9 @@ export class GuidesService {
     );
     const toCreate = new Guide({ user, guidanceServices: guidances });
     return this.guidesRepository.insert(toCreate);
+  }
+
+  async listGuides(listDto: ListGuidesDto) {
+    return this.guidesRepository.listGuides(listDto);
   }
 }
