@@ -1,7 +1,15 @@
 import { AbstractRepository } from "src/database/abstract.repository";
 import { Guide } from "./entities";
 import { Logger } from "@nestjs/common";
-import { EntityManager, FindOptionsOrder, In, Repository } from "typeorm";
+import {
+  Between,
+  EntityManager,
+  FindOptionsOrder,
+  In,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+} from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ListGuidesDto } from "./dto";
 
@@ -24,6 +32,22 @@ export class GuidesRepository extends AbstractRepository<Guide> {
         guidanceServices: {
           country: listDto?.countries ? In(listDto?.countries) : undefined,
           city: listDto?.cities ? In(listDto?.cities) : undefined,
+          pricePerPerson:
+            listDto?.highestPrice && listDto?.lowestPrice
+              ? Between(listDto.lowestPrice, listDto.highestPrice)
+              : listDto?.highestPrice && !listDto?.lowestPrice
+              ? LessThanOrEqual(listDto.highestPrice)
+              : listDto?.lowestPrice && !listDto?.highestPrice
+              ? MoreThanOrEqual(listDto.lowestPrice)
+              : undefined,
+          duration:
+            listDto?.highestDuration && listDto?.lowestDuration
+              ? Between(listDto.lowestDuration, listDto.highestDuration)
+              : listDto?.highestDuration && !listDto?.lowestDuration
+              ? LessThanOrEqual(listDto.highestDuration)
+              : listDto?.lowestDuration && !listDto?.highestDuration
+              ? MoreThanOrEqual(listDto.lowestDuration)
+              : undefined,
         },
       },
       order,

@@ -1,11 +1,13 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsNumber, IsOptional, IsString } from "class-validator";
 import { Type } from "class-transformer";
 
 export class ListGuidesDto {
   @IsOptional()
+  @IsArray()
   @IsString({ each: true })
   cities?: string[];
   @IsOptional()
+  @IsArray()
   @IsString({ each: true })
   countries?: string[];
   @IsOptional()

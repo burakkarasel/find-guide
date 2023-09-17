@@ -21,7 +21,6 @@ export class GuidesController {
 
   @Get()
   async list(@Query(new ListGuidePipe()) dto: ListGuidesDto) {
-    console.log("my dto: ", dto);
     return this.guidesService.listGuides(dto);
   }
 }
