@@ -24,7 +24,11 @@ export class GuidesService {
     return this.guidesRepository.insert(toCreate);
   }
 
-  async listGuides(listDto: ListGuidesDto) {
+  async listGuides(listDto: ListGuidesDto): Promise<Guide[]> {
     return this.guidesRepository.listGuides(listDto);
+  }
+
+  async findGuideById(id: string): Promise<Guide> {
+    return this.guidesRepository.findGuideById(id);
   }
 }

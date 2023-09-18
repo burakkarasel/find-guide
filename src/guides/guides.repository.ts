@@ -59,8 +59,20 @@ export class GuidesRepository extends AbstractRepository<Guide> {
         guidanceServices: true,
         createdAt: true,
         updatedAt: true,
+        id: true,
       },
       relations: { user: true, guidanceServices: true },
     });
+  }
+
+  async findGuideById(id: string): Promise<Guide> {
+    const guide = await this.findOneBy(
+      { id },
+      { user: true, guidanceServices: true },
+    );
+    delete guide.user.email;
+    delete guide.user.password;
+    delete guide.user.phoneNumber;
+    return guide;
   }
 }

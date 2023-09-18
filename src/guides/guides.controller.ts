@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { GetUser } from "src/auth/decorator";
 import { CreateGuidanceServiceDto, ListGuidesDto } from "./dto";
 import { Guide } from "./entities";
@@ -22,5 +30,10 @@ export class GuidesController {
   @Get()
   async list(@Query(new ListGuidePipe()) dto: ListGuidesDto) {
     return this.guidesService.listGuides(dto);
+  }
+
+  @Get("/:id")
+  async findGuideById(@Param("id") id: string) {
+    return this.guidesService.findGuideById(id);
   }
 }
