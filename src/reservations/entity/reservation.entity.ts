@@ -1,8 +1,16 @@
 import { AbstractEntity } from "src/database/abstract.entity";
-import { GuidanceService, Guide } from "src/guides/entities";
+import { Guide } from "src/guides/entities";
 import { User } from "src/users/entities";
-import { Column, CreateDateColumn, ManyToOne, UpdateDateColumn } from "typeorm";
+import { GuidanceService } from "src/guidance-service/entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  UpdateDateColumn,
+} from "typeorm";
 
+@Entity()
 export class Reservation extends AbstractEntity<Reservation> {
   @CreateDateColumn({ name: "created_at", type: "timestamptz" })
   createdAt: Date;

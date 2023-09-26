@@ -5,6 +5,7 @@ import { UsersModule } from "./users/users.module";
 import { ConfigModule } from "@nestjs/config";
 import { GuidesModule } from './guides/guides.module';
 import { ReservationsModule } from './reservations/reservations.module';
+import { GuidanceServiceModule } from './guidance-service/guidance-service.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ReservationsModule } from './reservations/reservations.module';
     ConfigModule.forRoot({ isGlobal: true }),
     GuidesModule,
     ReservationsModule,
+    GuidanceServiceModule,
   ],
   controllers: [],
   providers: [],

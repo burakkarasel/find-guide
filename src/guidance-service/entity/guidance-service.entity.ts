@@ -1,6 +1,7 @@
 import { AbstractEntity } from "src/database/abstract.entity";
-import { Guide } from "./guide.entity";
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Guide } from "../../guides/entities/guide.entity";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { Reservation } from "src/reservations/entity";
 
 @Entity()
 export class GuidanceService extends AbstractEntity<GuidanceService> {
@@ -14,4 +15,10 @@ export class GuidanceService extends AbstractEntity<GuidanceService> {
   pricePerPerson: number;
   @Column({ nullable: true })
   duration: number;
+  @OneToMany(
+    () => Reservation,
+    (reservation: Reservation) => reservation.guidanceService,
+    { cascade: true },
+  )
+  reservations: Reservation[];
 }

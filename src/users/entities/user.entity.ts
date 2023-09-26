@@ -1,9 +1,11 @@
 import { AbstractEntity } from "src/database/abstract.entity";
 import { Guide } from "src/guides/entities/guide.entity";
+import { Reservation } from "src/reservations/entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   UpdateDateColumn,
 } from "typeorm";
@@ -26,4 +28,10 @@ export class User extends AbstractEntity<User> {
   fullName: string;
   @OneToOne(() => Guide, { nullable: true })
   guide: Guide;
+  @OneToMany(
+    () => Reservation,
+    (reservation: Reservation) => reservation.user,
+    { cascade: true },
+  )
+  reservations: Reservation[];
 }

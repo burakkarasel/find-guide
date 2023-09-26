@@ -8,7 +8,8 @@ import {
   OneToOne,
   UpdateDateColumn,
 } from "typeorm";
-import { GuidanceService } from "./guidance-service.entity";
+import { GuidanceService } from "../../guidance-service/entity/guidance-service.entity";
+import { Reservation } from "src/reservations/entity";
 
 @Entity()
 export class Guide extends AbstractEntity<Guide> {
@@ -25,4 +26,11 @@ export class Guide extends AbstractEntity<Guide> {
     { cascade: true },
   )
   guidanceServices: GuidanceService[];
+  @OneToMany(
+    () => Reservation,
+    (reservation: Reservation) => reservation.guide,
+    { cascade: true },
+  )
+  @JoinColumn()
+  reservations: Reservation[];
 }

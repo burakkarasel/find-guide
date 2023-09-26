@@ -2,7 +2,8 @@ import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { GuidesRepository } from "./guides.repository";
 import { User } from "src/users/entities";
 import { CreateGuidanceServiceDto, ListGuidesDto } from "./dto";
-import { GuidanceService, Guide } from "./entities";
+import { Guide } from "./entities";
+import { GuidanceService } from "src/guidance-service/entity";
 
 @Injectable()
 export class GuidesService {
