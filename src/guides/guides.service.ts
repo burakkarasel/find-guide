@@ -32,4 +32,8 @@ export class GuidesService {
   async findGuideById(id: string): Promise<Guide> {
     return this.guidesRepository.findGuideById(id);
   }
+
+  async findGuideByUserId(userId: string): Promise<Guide> {
+    return this.guidesRepository.findOneBy({ user: { id: userId } });
+  }
 }

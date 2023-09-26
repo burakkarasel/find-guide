@@ -1,15 +1,17 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { ReservationsRepository } from "./reservations.repository";
 import { CreateReservationDto } from "./dto";
 import { User } from "src/users/entities";
 import { Reservation } from "./entity";
 import { GuidanceServiceService } from "src/guidance-service/guidance-service.service";
+import { GuidesService } from "src/guides/guides.service";
 
 @Injectable()
 export class ReservationsService {
   constructor(
     private readonly reservationsRepository: ReservationsRepository,
     private readonly guidanceServiceService: GuidanceServiceService,
+    private readonly guideService: GuidesService,
   ) {}
   private readonly logger = new Logger(ReservationsService.name);
 
@@ -72,5 +74,25 @@ export class ReservationsService {
         },
       },
     );
+  }
+
+  async updateReservationApprovement(
+    reservationId: string,
+    userId: string,
+  ): Promise<Reservation> {
+    const reservation = await this.findReservationById(reservationId);
+    const guide = await this.guideService.findGuideByUserId(userId);
+    if (reservation.guide.id !== guide.id) {
+      this.logger.warn(
+        `Guide with ID: ${guide.id} tried to update another guide's reservation with ID: ${reservationId}`,
+      );
+      throw new UnauthorizedException("Unathorized for the action");
+    }
+    reservation.approved = true;
+    await this.reservationsRepository.findOneAndUpdate(
+      { id: reservationId },
+      { ...reservation },
+    );
+    return reservation;
   }
 }
