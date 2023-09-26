@@ -49,4 +49,9 @@ export class ReservationsController {
       user,
     );
   }
+
+  @Get()
+  async listReservations(@GetUser() user: User) {
+    return this.reservationsService.listReservations(user);
+  }
 }

@@ -116,4 +116,60 @@ export class ReservationsService {
     );
     return reservation;
   }
+
+  async listReservations(user: User): Promise<Reservation[]> {
+    const options = {
+      where: {
+        user: { id: "" },
+        guide: { id: "" },
+      },
+      relations: { user: true, guidanceService: true, guide: true },
+      select: {
+        user: {
+          id: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+          phoneNumber: true,
+          fullName: true,
+        },
+        guide: {
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+          user: {
+            id: true,
+            email: true,
+            createdAt: true,
+            updatedAt: true,
+            phoneNumber: true,
+            fullName: true,
+          },
+        },
+        guidanceService: {
+          id: true,
+          pricePerPerson: true,
+          duration: true,
+          country: true,
+          city: true,
+        },
+      },
+    };
+
+    if (user.isGuide) {
+      options.where.guide.id = user.guide.id;
+      delete options.where.user;
+      delete options.relations.guide;
+    } else {
+      options.where.user.id = user.id;
+      delete options.where.guide;
+      delete options.relations.user;
+    }
+
+    return this.reservationsRepository.listBy(
+      { ...options.where },
+      { ...options.relations },
+      { ...options.select },
+    );
+  }
 }
