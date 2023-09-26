@@ -14,7 +14,7 @@ export class UsersService {
   }
 
   async findUserById(id: string): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ id });
+    const user = await this.usersRepository.findOneBy({ id }, { guide: true });
     delete user.password;
     return user;
   }

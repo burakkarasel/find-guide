@@ -4,14 +4,12 @@ import { CreateReservationDto } from "./dto";
 import { User } from "src/users/entities";
 import { Reservation } from "./entity";
 import { GuidanceServiceService } from "src/guidance-service/guidance-service.service";
-import { GuidesService } from "src/guides/guides.service";
 
 @Injectable()
 export class ReservationsService {
   constructor(
     private readonly reservationsRepository: ReservationsRepository,
     private readonly guidanceServiceService: GuidanceServiceService,
-    private readonly guideService: GuidesService,
   ) {}
   private readonly logger = new Logger(ReservationsService.name);
 
@@ -76,15 +74,38 @@ export class ReservationsService {
     );
   }
 
-  async updateReservationApprovement(
+  async findReservationDetailsById(
     reservationId: string,
-    userId: string,
+    user: User,
   ): Promise<Reservation> {
     const reservation = await this.findReservationById(reservationId);
-    const guide = await this.guideService.findGuideByUserId(userId);
-    if (reservation.guide.id !== guide.id) {
+
+    if (
+      user.id !== reservation.user.id ||
+      user.guide.id !== reservation.guide.id
+    ) {
+      if (user.guide) {
+        this.logger.warn(
+          `Guide with ID: ${user.guide.id} tried to fetch another guide's reservation with ID: ${reservationId}`,
+        );
+      } else {
+        this.logger.warn(
+          `User with ID: ${user.id} tried to fetch another user's reservation with ID: ${reservationId}`,
+        );
+      }
+      throw new UnauthorizedException("Unathorized for the action");
+    }
+    return reservation;
+  }
+
+  async updateReservationApprovement(
+    reservationId: string,
+    user: User,
+  ): Promise<Reservation> {
+    const reservation = await this.findReservationById(reservationId);
+    if (reservation.guide.id !== user.guide.id) {
       this.logger.warn(
-        `Guide with ID: ${guide.id} tried to update another guide's reservation with ID: ${reservationId}`,
+        `Guide with ID: ${user.guide.id} tried to update another guide's reservation with ID: ${reservationId}`,
       );
       throw new UnauthorizedException("Unathorized for the action");
     }

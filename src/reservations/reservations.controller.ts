@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
@@ -14,11 +15,11 @@ import { GuideGuard, JwtGuard } from "src/auth/guard";
 import { Reservation } from "./entity";
 
 @Controller("api/v1/reservations")
+@UseGuards(JwtGuard)
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
   @Post()
-  @UseGuards(JwtGuard)
   async createReservation(
     @Body() dto: CreateReservationDto,
     @GetUser() user: User,
@@ -27,14 +28,25 @@ export class ReservationsController {
   }
 
   @Patch("/:reservationId")
-  @UseGuards(JwtGuard, GuideGuard)
+  @UseGuards(GuideGuard)
   async updateReservationApprovement(
     @Param("reservationId") reservationId: string,
-    @GetUser("id") userId: string,
+    @GetUser() user: User,
   ): Promise<Reservation> {
     return this.reservationsService.updateReservationApprovement(
       reservationId,
-      userId,
+      user,
+    );
+  }
+
+  @Get("/:reservationId")
+  async getReservationById(
+    @Param("reservationId") reservationId: string,
+    @GetUser() user: User,
+  ) {
+    return this.reservationsService.findReservationDetailsById(
+      reservationId,
+      user,
     );
   }
 }

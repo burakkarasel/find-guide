@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   UpdateDateColumn,
@@ -27,6 +28,7 @@ export class User extends AbstractEntity<User> {
   @Column({ name: "full_name" })
   fullName: string;
   @OneToOne(() => Guide, { nullable: true })
+  @JoinColumn()
   guide: Guide;
   @OneToMany(
     () => Reservation,
